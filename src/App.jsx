@@ -6,7 +6,7 @@ import FileManager from './components/FileManager';
 import Notification from './components/Notification';
 import { Database } from 'lucide-react';
 
-const API_BASE_URL = 'http://127.0.0.1:8000'; // Assuming FastAPI default
+const API_BASE_URL = 'http://192.168.1.6:8000'; // Assuming FastAPI default
 
 function App() {
   const [data, setData] = useState([]);
