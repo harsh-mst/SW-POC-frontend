@@ -1,8 +1,43 @@
-import React from 'react';
-import { Table, ChevronLeft, ChevronRight, LayoutDashboard, Edit2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, ChevronsRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange, onEdit }) => {
+const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange }) => {
     const totalPages = Math.ceil(total / limit);
+    const [pageInput, setPageInput] = useState(page);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        setPageInput(page);
+    }, [page]);
+
+    const validateAndNavigate = () => {
+        const pageNumber = Number(pageInput);
+
+        if (!pageInput || isNaN(pageNumber)) {
+            setError("Enter a valid page number");
+            return;
+        }
+
+        if (pageNumber <= 0) {
+            setError("Page number cannot be negative or zero");
+            return;
+        }
+
+        if (pageNumber > totalPages) {
+            setError(`Page ${pageNumber} does not exist`);
+            return;
+        }
+
+        setError("");
+        onPageChange(pageNumber);
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            validateAndNavigate();
+        }
+    };
+
 
     return (
         <div className="glass-card" style={{ marginBottom: '2rem' }}>
@@ -82,8 +117,12 @@ const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange, onEd
             </div>
 
             <div className="pagination">
-                <span>Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, total)} of {total} results</span>
+                <span>
+                    Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, total)} of {total} results
+                </span>
+
                 <div className="page-controls">
+
                     <button
                         className="page-btn"
                         onClick={() => onPageChange(page - 1)}
@@ -91,7 +130,23 @@ const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange, onEd
                     >
                         <ChevronLeft size={18} />
                     </button>
-                    <button className="page-btn active">{page}</button>
+
+                    <input
+                        type="number"
+                        value={pageInput}
+                        onChange={(e) => {
+                            setPageInput(e.target.value);
+                            setError("");
+                        }}
+                        onBlur={validateAndNavigate}
+                        onKeyDown={handleKeyDown}
+                        min="1"
+                        max={totalPages}
+                        className="page-input"
+                    />
+
+                    <span style={{ marginLeft: "6px" }}>/ {totalPages}</span>
+
                     <button
                         className="page-btn"
                         onClick={() => onPageChange(page + 1)}
@@ -99,7 +154,24 @@ const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange, onEd
                     >
                         <ChevronRight size={18} />
                     </button>
+
+                    {/* Last page */}
+                    <button
+                        className="page-btn"
+                        onClick={() => onPageChange(totalPages)}
+                        disabled={page === totalPages}
+                        title="Go to last page"
+                    >
+                        Go to last page
+                    </button>
+
                 </div>
+
+                {error && (
+                    <p style={{ color: "red", fontSize: "12px", marginTop: "4px" }}>
+                        {error}
+                    </p>
+                )}
             </div>
         </div >
     );
