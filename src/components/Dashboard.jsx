@@ -174,11 +174,11 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
 
                     <button
                         className="page-btn"
-                        onClick={() => onPageChange(totalPages)}
-                        disabled={page === totalPages}
-                        title="Go to last page"
+                        onClick={() => onPageChange(page === totalPages ? 1 : totalPages)}
+                        disabled={totalPages === 0}
+                        title={page === totalPages ? "Go to first page" : "Go to last page"}
                     >
-                        Go to last page
+                        {page === totalPages ? "Go to first page" : "Go to last page"}
                     </button>
 
                 </div>
