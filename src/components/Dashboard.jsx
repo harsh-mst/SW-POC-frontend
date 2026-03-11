@@ -155,7 +155,6 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                         <ChevronRight size={18} />
                     </button>
 
-                    {/* Last page */}
                     <button
                         className="page-btn"
                         onClick={() => onPageChange(totalPages)}

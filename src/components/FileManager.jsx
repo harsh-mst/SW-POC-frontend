@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Upload, Download, FileText, AlertTriangle } from 'lucide-react';
 
 const FileManager = ({ onUpload, onDownload, notify }) => {
@@ -28,9 +28,9 @@ const FileManager = ({ onUpload, onDownload, notify }) => {
                 <Upload size={20} /> Upload CSV/Excel
             </button>
 
-            <button className="btn btn-secondary" onClick={() => onDownload('clean')}>
+            {/* <button className="btn btn-secondary" onClick={() => onDownload('clean')}>
                 <FileText size={20} color="var(--success)" /> Download Clean Data
-            </button>
+            </button> */}
         </div>
     );
 };
