@@ -58,7 +58,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                     <input
                         type="text"
                         className="input"
-                        placeholder="Search Order ID or Customer..."
+                        placeholder="Search OrderID / Customer"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         style={{ width: "220px" }}
