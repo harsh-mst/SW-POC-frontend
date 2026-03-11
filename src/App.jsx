@@ -16,6 +16,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  const [editingEntry, setEditingEntry] = useState(null);
 
   const addNotification = (message, type = 'success') => {
     const id = Date.now();
@@ -77,6 +78,38 @@ function App() {
       }
       throw error;
     }
+  };
+
+  const handleUpdateData = async (orderNumber, updatedData) => {
+    try {
+      const response = await axios.put(`${API_BASE_URL}/edit-entry/${orderNumber}`, updatedData);
+      addNotification('Entry updated successfully!', 'success');
+      setEditingEntry(null);
+      fetchData();
+      return response.data;
+    } catch (error) {
+      console.error('Error updating data:', error);
+
+      if (error.response && error.response.status === 400) {
+        const detail = error.response.data.detail;
+        if (detail && detail.errors) {
+          const errorMessage = detail.errors.join(' | ');
+          addNotification(`Update failed: ${errorMessage}`, 'error');
+        } else {
+          addNotification('Update failed. Please check your data.', 'error');
+        }
+      } else if (error.response && error.response.status === 404) {
+        addNotification('Order not found.', 'error');
+      } else {
+        addNotification('Failed to update data in the database.', 'error');
+      }
+      throw error;
+    }
+  };
+
+  const handleEditEntry = (entry) => {
+    setEditingEntry(entry);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleUpload = async (file) => {
@@ -175,6 +208,9 @@ function App() {
 
         <AddDataForm
           onAdd={handleAddData}
+          onUpdate={handleUpdateData}
+          editingEntry={editingEntry}
+          onCancel={() => setEditingEntry(null)}
           notify={addNotification}
         />
 
@@ -190,6 +226,7 @@ function App() {
             limit={limit}
             onPageChange={setPage}
             onLimitChange={setLimit}
+            onEdit={handleEditEntry}
           />
         )}
       </main>

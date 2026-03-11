@@ -1,7 +1,7 @@
 import React from 'react';
-import { Table, ChevronLeft, ChevronRight, LayoutDashboard } from 'lucide-react';
+import { Table, ChevronLeft, ChevronRight, LayoutDashboard, Edit2 } from 'lucide-react';
 
-const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange }) => {
+const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange, onEdit }) => {
     const totalPages = Math.ceil(total / limit);
 
     return (
@@ -36,6 +36,7 @@ const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange }) =>
                             <th>Status</th>
                             <th>Product</th>
                             <th>Country</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,10 +59,20 @@ const Dashboard = ({ data, total, page, limit, onPageChange, onLimitChange }) =>
                                 </td>
                                 <td>{row.PRODUCTLINE}</td>
                                 <td>{row.COUNTRY}</td>
+                                <td>
+                                    <button
+                                        className="btn btn-secondary"
+                                        style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        onClick={() => onEdit(row)}
+                                        title="Edit Entry"
+                                    >
+                                        <Edit2 size={16} />
+                                    </button>
+                                </td>
                             </tr>
                         )) : (
                             <tr>
-                                <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                                <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
                                     No data available.
                                 </td>
                             </tr>
