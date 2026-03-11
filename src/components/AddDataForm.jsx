@@ -22,13 +22,11 @@ const AddDataForm = ({ onAdd, notify }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // In a real app, you'd send this to the API
-            // For now, we'll simulate the call
             await onAdd(formData);
-            notify('Data added successfully!', 'success');
             setFormData(FIELDS.reduce((acc, field) => ({ ...acc, [field]: '' }), {}));
         } catch (error) {
-            notify('Failed to add data.', 'error');
+            // Error handled by parent onAdd implementation
+            console.error('Form submission error:', error);
         }
     };
 

@@ -56,13 +56,26 @@ function App() {
 
   const handleAddData = async (newData) => {
     try {
-      // Mock POST call to /clean_data or similar
-      await axios.post(`${API_BASE_URL}/clean_data`, newData);
+      const response = await axios.post(`${API_BASE_URL}/add-entry`, newData);
+      addNotification('Entry added successfully!', 'success');
       fetchData();
+      return response.data;
     } catch (error) {
-      // Fallback if POST isn't implemented on backend yet
-      console.warn('POST not implemented, simulating success');
-      setTimeout(() => fetchData(), 500);
+      console.error('Error adding data:', error);
+
+      if (error.response && error.response.status === 400) {
+        const detail = error.response.data.detail;
+        if (detail && detail.errors) {
+          // Join all validation errors and show them
+          const errorMessage = detail.errors.join(' | ');
+          addNotification(`Validation failed: ${errorMessage}`, 'error');
+        } else {
+          addNotification('Validation failed. Please check your data.', 'error');
+        }
+      } else {
+        addNotification('Failed to add data to the database.', 'error');
+      }
+      throw error;
     }
   };
 
