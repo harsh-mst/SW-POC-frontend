@@ -5,6 +5,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
     const totalPages = Math.ceil(total / limit);
     const [pageInput, setPageInput] = useState(page);
     const [error, setError] = useState("");
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setPageInput(page);
@@ -38,6 +39,13 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
         }
     };
 
+    const filteredData = search
+        ? data.filter((row) =>
+            row.ORDERNUMBER.toString().includes(search) ||
+            row.CUSTOMERNAME.toLowerCase().includes(search.toLowerCase())
+        )
+        : data;
+
 
     return (
         <div className="glass-card" style={{ marginBottom: '2rem' }}>
@@ -46,6 +54,15 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                     <LayoutDashboard size={24} /> Data Dashboard
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <span>Filter</span>
+                    <input
+                        type="text"
+                        className="input"
+                        placeholder="Search Order ID or Customer..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        style={{ width: "220px" }}
+                    />
                     <span className="label" style={{ margin: 0 }}>Rows per page:</span>
                     <select
                         className="input"
@@ -75,7 +92,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                         </tr>
                     </thead>
                     <tbody>
-                        {data.length > 0 ? data.map((row, idx) => (
+                        {filteredData.length > 0 ? filteredData.map((row, idx) => (
                             <tr key={idx}>
                                 <td>{row.ORDERNUMBER}</td>
                                 <td>{row.CUSTOMERNAME}</td>
