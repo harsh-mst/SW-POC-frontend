@@ -1,11 +1,10 @@
 import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, ChevronsRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange }) => {
+const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange, search, onSearchChange }) => {
     const totalPages = Math.ceil(total / limit);
     const [pageInput, setPageInput] = useState(page);
     const [error, setError] = useState("");
-    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setPageInput(page);
@@ -39,12 +38,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
         }
     };
 
-    const filteredData = search
-        ? data.filter((row) =>
-            row.ORDERNUMBER.toString().includes(search) ||
-            row.CUSTOMERNAME.toLowerCase().includes(search.toLowerCase())
-        )
-        : data;
+    const filteredData = data;
 
 
     return (
@@ -60,7 +54,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                         className="input"
                         placeholder="Search Order ID or Customer..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => { onSearchChange(e.target.value); }}
                         style={{ width: "220px" }}
                     />
                     <span className="label" style={{ margin: 0 }}>Rows per page:</span>
