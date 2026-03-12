@@ -6,7 +6,7 @@ import FileManager from './components/FileManager';
 import Notification from './components/Notification';
 import { Database } from 'lucide-react';
 
-const API_BASE_URL = 'http://192.168.1.6:8000'; 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 function App() {
   const [data, setData] = useState([]);
