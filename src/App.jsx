@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Dashboard from './components/Dashboard';
 import AddDataForm from './components/AddDataForm';
@@ -6,13 +6,15 @@ import FileManager from './components/FileManager';
 import Notification from './components/Notification';
 import { Database } from 'lucide-react';
 
-const API_BASE_URL = 'http://192.168.1.6:8000'; // Assuming FastAPI default
+const API_BASE_URL = 'http://192.168.1.6:8000'; 
 
 function App() {
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [notifications, setNotifications] = useState([]);
@@ -30,9 +32,9 @@ function App() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Pass page and limit to the API
+      // Pass page, limit, and search to the API
       const response = await axios.get(`${API_BASE_URL}/clean_data`, {
-        params: { page, limit }
+        params: { page, limit, ...(debouncedSearch ? { search: debouncedSearch } : {}) }
       });
 
       // Update state with API response
@@ -51,9 +53,22 @@ function App() {
     }
   };
 
+  // Debounce: update debouncedSearch 400ms after user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   useEffect(() => {
     fetchData();
-  }, [page, limit]);
+  }, [page, limit, debouncedSearch]);
+
+  const handleSearchChange = (value) => {
+    setSearch(value);
+  };
 
   const handleAddData = async (newData) => {
     try {
@@ -227,6 +242,10 @@ function App() {
             onPageChange={setPage}
             onLimitChange={setLimit}
             onEdit={handleEditEntry}
+            addNotification={addNotification}
+            fetchData={fetchData}
+            search={search}
+            onSearchChange={handleSearchChange}
           />
         )}
       </main>
