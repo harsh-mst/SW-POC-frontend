@@ -1,15 +1,13 @@
-import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, ChevronsRight, Trash2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange, addNotification, fetchData }) => {
 
+const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange, search, onSearchChange, addNotification, fetchData }) => {
     const API_BASE_URL = 'http://192.168.1.6:8000';
-
     const totalPages = Math.ceil(total / limit);
     const [pageInput, setPageInput] = useState(page);
     const [error, setError] = useState("");
-    const [search, setSearch] = useState("");
     const [dataDelete, setDataDelete] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
@@ -80,7 +78,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                         className="input"
                         placeholder="Search OrderID / Customer"
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => { onSearchChange(e.target.value); }}
                         style={{ width: "220px" }}
                     />
                     <span className="label" style={{ margin: 0 }}>Rows per page:</span>
