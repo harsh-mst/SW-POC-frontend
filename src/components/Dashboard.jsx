@@ -4,7 +4,7 @@ import axios from 'axios';
 
 
 const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange, search, onSearchChange, addNotification, fetchData }) => {
-    const API_BASE_URL = 'http://192.168.1.6:8000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
     const totalPages = Math.ceil(total / limit);
     const [pageInput, setPageInput] = useState(page);
     const [error, setError] = useState("");
