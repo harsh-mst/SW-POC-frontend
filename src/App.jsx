@@ -32,13 +32,10 @@ function App() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Pass page, limit, and search to the API
       const response = await axios.get(`${API_BASE_URL}/clean_data`, {
         params: { page, limit, ...(debouncedSearch ? { search: debouncedSearch } : {}) }
       });
 
-      // Update state with API response
-      // Handle cases where response.data.data might be null or undefined
       const rawData = response.data?.data || [];
       setData(rawData.map(item => {
         const { _sa_instance_state, ...rest } = item;
@@ -53,7 +50,6 @@ function App() {
     }
   };
 
-  // Debounce: update debouncedSearch 400ms after user stops typing
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -82,7 +78,6 @@ function App() {
       if (error.response && error.response.status === 400) {
         const detail = error.response.data.detail;
         if (detail && detail.errors) {
-          // Join all validation errors and show them
           const errorMessage = detail.errors.join(' | ');
           addNotification(`Validation failed: ${errorMessage}`, 'error');
         } else {
@@ -131,7 +126,7 @@ function App() {
     addNotification(`Uploading ${file.name}...`, 'info');
     const formData = new FormData();
     formData.append('file', file);
-    setUploadProgress(1); // Start progress
+    setUploadProgress(1); 
 
     try {
       const response = await axios.post(`${API_BASE_URL}/upload-csv`, formData, {
@@ -147,7 +142,6 @@ function App() {
 
       const contentType = response.headers['content-type'];
 
-      // Check if it's the Excel file (faulty data)
       if (contentType && (
         contentType.includes('spreadsheetml') ||
         contentType.includes('excel') ||
@@ -171,19 +165,15 @@ function App() {
       console.error('Error uploading file:', error);
       addNotification('Failed to upload or process file.', 'error');
     } finally {
-      setUploadProgress(0); // Reset progress
+      setUploadProgress(0); 
     }
   };
 
   const handleDownload = (type) => {
     addNotification(`Preparing ${type} data download...`, 'success');
-    // Mock download logic
     const link = document.createElement('a');
     link.href = `${API_BASE_URL}/download/${type}`;
     link.download = `${type}_data.csv`;
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
 
     setTimeout(() => {
       addNotification(`${type.charAt(0).toUpperCase() + type.slice(1)} data downloaded!`, 'success');

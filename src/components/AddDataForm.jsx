@@ -30,7 +30,7 @@ const FIELDS = [
 ];
 
 const VALIDATIONS = {
-    ORDERNUMBER: { type: "number", required: true },
+    ORDERNUMBER: { type: "number", required: true, min: 1 },
 
     QUANTITYORDERED: { type: "number", min: 1 },
     PRICEEACH: { type: "number", min: 0.01 },
@@ -261,6 +261,7 @@ const AddDataForm = ({ onAdd, onUpdate, editingEntry, onCancel }) => {
                                 placeholder={`Enter ${field}`}
                                 required={field === "ORDERNUMBER"}
                                 disabled={editingEntry && field === "ORDERNUMBER"}
+                                min={VALIDATIONS[field]?.min}
                             />
                         )}
 

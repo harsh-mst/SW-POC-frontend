@@ -15,6 +15,12 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
         setPageInput(page);
     }, [page]);
 
+    useEffect(() => {
+        if (pageInput > totalPages) {
+            setPageInput(totalPages);
+        }
+    }, [totalPages]);
+
     const validateAndNavigate = () => {
         const pageNumber = Number(pageInput);
 
@@ -86,7 +92,11 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                         className="input"
                         style={{ width: 'auto', padding: '0.4rem' }}
                         value={limit}
-                        onChange={(e) => onLimitChange(Number(e.target.value))}
+                        onChange={(e) => {
+                            const newLimit = Number(e.target.value);
+                            onLimitChange(newLimit);
+                            onPageChange(1);
+                        }}
                     >
                         {[10, 50, 100].map(val => (
                             <option key={val} value={val}>{val}</option>
