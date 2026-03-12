@@ -30,7 +30,7 @@ const FIELDS = [
 ];
 
 const VALIDATIONS = {
-    ORDERNUMBER: { type: "number", required: true },
+    ORDERNUMBER: { type: "number", required: true, min: 1 },
 
     QUANTITYORDERED: { type: "number", min: 1 },
     PRICEEACH: { type: "number", min: 0.01 },
