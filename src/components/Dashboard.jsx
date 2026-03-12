@@ -1,11 +1,17 @@
-import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, ChevronsRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, LayoutDashboard, Edit2, ChevronsRight, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange }) => {
+const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChange, addNotification, fetchData }) => {
+
+    const API_BASE_URL = 'http://192.168.1.6:8000';
+
     const totalPages = Math.ceil(total / limit);
     const [pageInput, setPageInput] = useState(page);
     const [error, setError] = useState("");
     const [search, setSearch] = useState("");
+    const [dataDelete, setDataDelete] = useState(false);
+    const [deleteId, setDeleteId] = useState(null);
 
     useEffect(() => {
         setPageInput(page);
@@ -36,6 +42,20 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             validateAndNavigate();
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`${API_BASE_URL}/delete-entry/${deleteId}`);
+
+            addNotification("Record deleted successfully", "success");
+            setDataDelete(false);
+            fetchData();
+
+        } catch (error) {
+            console.error("Delete failed:", error);
+            addNotification("Failed to delete record", "error");
         }
     };
 
@@ -111,7 +131,7 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                                 </td>
                                 <td>{row.PRODUCTLINE}</td>
                                 <td>{row.COUNTRY}</td>
-                                <td>
+                                <td style={{ display: "flex", gap: "10px" }}>
                                     <button
                                         className="btn btn-secondary"
                                         style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -119,6 +139,17 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                                         title="Edit Entry"
                                     >
                                         <Edit2 size={16} />
+                                    </button>
+                                    <button
+                                        className="btn btn-secondary"
+                                        style={{ padding: '0.4rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                        onClick={() => {
+                                            setDeleteId(row.ORDERNUMBER);
+                                            setDataDelete(true);
+                                        }}
+                                        title="Delete Entry"
+                                    >
+                                        <Trash2 size={16} />
                                     </button>
                                 </td>
                             </tr>
@@ -189,6 +220,31 @@ const Dashboard = ({ data, onLimitChange, onEdit, page, limit, total, onPageChan
                     </p>
                 )}
             </div>
+
+            {dataDelete && (
+                <div className="modal-overlay">
+                    <div className="modal-box">
+                        <h3>Delete Confirmation</h3>
+                        <p>Do you want to delete this data?</p>
+
+                        <div className="modal-actions">
+                            <button
+                                onClick={handleDelete}
+                                className="btn-delete"
+                            >
+                                Delete
+                            </button>
+
+                            <button
+                                onClick={() => setDataDelete(false)}
+                                className="btn-cancel"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 };

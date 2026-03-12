@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Dashboard from './components/Dashboard';
 import AddDataForm from './components/AddDataForm';
@@ -6,7 +6,7 @@ import FileManager from './components/FileManager';
 import Notification from './components/Notification';
 import { Database } from 'lucide-react';
 
-const API_BASE_URL = 'http://192.168.1.6:8000'; // Assuming FastAPI default
+const API_BASE_URL = 'http://192.168.1.6:8000'; 
 
 function App() {
   const [data, setData] = useState([]);
@@ -227,6 +227,8 @@ function App() {
             onPageChange={setPage}
             onLimitChange={setLimit}
             onEdit={handleEditEntry}
+            addNotification={addNotification}
+            fetchData={fetchData}
           />
         )}
       </main>
