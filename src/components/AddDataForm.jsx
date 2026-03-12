@@ -261,6 +261,7 @@ const AddDataForm = ({ onAdd, onUpdate, editingEntry, onCancel }) => {
                                 placeholder={`Enter ${field}`}
                                 required={field === "ORDERNUMBER"}
                                 disabled={editingEntry && field === "ORDERNUMBER"}
+                                min={VALIDATIONS[field]?.min}
                             />
                         )}
 
