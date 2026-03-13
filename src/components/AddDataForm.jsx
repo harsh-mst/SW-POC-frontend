@@ -33,9 +33,9 @@ const VALIDATIONS = {
     ORDERNUMBER: { type: "number", required: true, min: 1 },
 
     QUANTITYORDERED: { type: "number", min: 1 },
-    PRICEEACH: { type: "number", min: 0.01 },
+    PRICEEACH: { type: "number", min: 1 },
     ORDERLINENUMBER: { type: "number", min: 1 },
-    SALES: { type: "number", min: 0.01 },
+    SALES: { type: "number", min: 1 },
 
     ORDERDATE: { type: "datetime-local" },
 
@@ -43,7 +43,7 @@ const VALIDATIONS = {
     MONTH_ID: { type: "number", min: 1, max: 12 },
     YEAR_ID: { type: "number" },
 
-    MSRP: { type: "number", min: 0.01 },
+    MSRP: { type: "number", min: 1 },
 
     PHONE: {
         pattern: /^[0-9]{0,10}$/,
