@@ -41,7 +41,7 @@ const VALIDATIONS = {
 
     QTR_ID: { type: "number", min: 1, max: 4 },
     MONTH_ID: { type: "number", min: 1, max: 12 },
-    YEAR_ID: { type: "number" },
+    YEAR_ID: { type: "number", min: 1900 },
 
     MSRP: { type: "number", min: 1 },
 
